@@ -33,6 +33,10 @@ predict(object)
 beta_A; beta_D
 
 
+###############################
+## Next a covariate example.
+###############################
+
 
 
 
