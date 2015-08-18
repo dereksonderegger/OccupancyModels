@@ -32,10 +32,10 @@ predict.RN_OccupancyModel <- function(object, newdata=NULL, level=0.95){
     AX <- model.matrix(object$user.data$Occupancy.formula, newdata) 
   }
   lambda <- exp(AX %*% t(rstan::extract(object$chains, pars='beta_A')$beta_A) )
-  lambda <- cbind( 
-    lambda.hat = 1-ppois(0, apply(lambda, 1, mean)),
-    lwr        = 1-ppois(0, apply(lambda, 1, quantile, probs=   (1-level)/2)),
-    upr        = 1-ppois(0, apply(lambda, 1, quantile, probs= 1-(1-level)/2)) )
+  Psi <- cbind( 
+    Psi.hat = 1-ppois(0, apply(lambda, 1, mean)),
+    lwr     = 1-ppois(0, apply(lambda, 1, quantile, probs=   (1-level)/2)),
+    upr     = 1-ppois(0, apply(lambda, 1, quantile, probs= 1-(1-level)/2)) )
   
   return(Psi)    
 }

@@ -5,23 +5,29 @@
 \title{Analyzes Occupancy data using the Occupancy/Detection model}
 \usage{
 Occ.OD(Y, Covariate.data = NULL, Occupancy.formula = ~1,
-  Detection.formula = ~1, n.chains = 4, n.iter = 1000, fit = NULL,
-  inits = NULL)
+  Detection.formula = ~1, n.chains = 4, n.adapt = 1000, n.iter = 1000,
+  num.cores = 1, fit = NULL, inits = NULL)
 }
 \arguments{
-\item{Y}{}
+\item{Y}{A data frame with 5 columns - Species, Site, Observer, Effort, NumDetections}
 
-\item{Covariates}{}
+\item{Covariate.data}{Data frame with the same number of rows as Y}
 
-\item{Effort}{}
+\item{Occupancy.formula}{Model formula specifying the relationship between Occupancy and the covariates}
 
-\item{Occupancy}{model}
+\item{Detection.formula}{Model formula specifying the relationship between Detection probability and the covariates}
 
-\item{Occupancy}{params}
+\item{n.chains}{How many MCMC chains to fit.}
 
-\item{Detection}{model}
+\item{n.adapt}{How long should the burn-in phase be.}
 
-\item{Detection}{params}
+\item{n.iter}{How many samples to take after the burn-in.}
+
+\item{num.cores}{How many computer cores to use.}
+
+\item{inits}{Initial values for the model chains.}
+
+\item{N.limit}{Maximum conceivable number of individuals at a site. Making this too large slows down the model fitting, though.}
 }
 \description{
 Uses Mackenzie's Occupancy/Detection model.

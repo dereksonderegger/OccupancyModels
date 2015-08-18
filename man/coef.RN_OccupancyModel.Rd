@@ -4,7 +4,7 @@
 \alias{coef.RN_OccupancyModel}
 \title{Return the model parameter estimates}
 \usage{
-\method{coef}{RN_OccupancyModel}(obj, family = NULL)
+\method{coef}{RN_OccupancyModel}(object, fun = identity)
 }
 \description{
 Return the model parameter estimates
