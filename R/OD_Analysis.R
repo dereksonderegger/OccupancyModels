@@ -115,7 +115,7 @@ Occ.OD <- function(Y, Covariate.data=NULL,
   }
 
   Occ_compiled_OD_model_STAN <<- 
-    stan_model( file=system.file('OD_Model.stan', package='OccupancyModelsSTAN'),
+    stan_model( file=system.file('OD_Model.stan', package='OccupancyModels'),
                 model_name = 'Occ_OD_STAN')
   
   chains <- sampling(Occ_compiled_OD_model_STAN, data=Data,

@@ -117,7 +117,7 @@ Occ.RN <- function( Y, Covariate.data=NULL,
   #pars <- c(pars, 'r')
   Data$N_limit <- N.limit
   
-  Occ_compiled_RN_Model_STAN <<- stan_model( file=system.file('RN_Model.stan', package='OccupancyModelsSTAN'),
+  Occ_compiled_RN_Model_STAN <<- stan_model( file=system.file('RN_Model.stan', package='OccupancyModels'),
                                              model_name='Occ_RN_Model_STAN' )
   chains <- sampling(Occ_compiled_RN_Model_STAN, data=Data,
                   pars=pars, chains=n.chains, iter=n.iter, cores=num.cores )
