@@ -110,22 +110,22 @@
     } // for(i in 1:n)
   } // model
 
-  generated quantities{
-    vector [n] Psi_fixed;
-    vector [n] Psi_random;
-    vector [n] lambda_fixed;
-    vector [n] lambda_random;
+  //generated quantities{
+    //vector [n] Psi_fixed;
+    //vector [n] Psi_random;
+    //vector [n] lambda_fixed;
+    //vector [n] lambda_random;
 
-    lambda_fixed <- exp( AX * beta_A );
-    if( p_AZ > 1 ){
-      lambda_random  <- exp(AX * beta_A + AZ * gamma_A);
-    }else{
-      lambda_random <- exp( AX * beta_A);
-    }
+    //lambda_fixed <- exp( AX * beta_A );
+    //if( p_AZ > 1 ){
+    //  lambda_random  <- exp(AX * beta_A + AZ * gamma_A);
+    //}else{
+    //  lambda_random <- exp( AX * beta_A);
+    //}
 
-    for(i in 1:n){
-      Psi_fixed[i]  <- 1 - exp( poisson_log(0, lambda_fixed[i]));
-      Psi_random[i] <- 1 - exp( poisson_log(0, lambda_random[i]));
-    }
+    //for(i in 1:n){
+      //Psi_fixed[i]  <- 1 - exp( poisson_log(0, lambda_fixed[i]));
+      //Psi_random[i] <- 1 - exp( poisson_log(0, lambda_random[i]));
+    //}
   }
 
