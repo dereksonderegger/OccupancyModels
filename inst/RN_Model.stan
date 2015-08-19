@@ -127,5 +127,5 @@
       //Psi_fixed[i]  <- 1 - exp( poisson_log(0, lambda_fixed[i]));
       //Psi_random[i] <- 1 - exp( poisson_log(0, lambda_random[i]));
     //}
-  }
+  //}
 

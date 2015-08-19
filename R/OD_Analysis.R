@@ -119,7 +119,7 @@ Occ.OD <- function(Y, Covariate.data=NULL,
                 model_name = 'Occ_OD_STAN')
   
   chains <- sampling(Occ_compiled_OD_model_STAN, data=Data,
-            pars=pars, chains=n.chains, iter=n.iter, cores=2 )
+            pars=pars, chains=n.chains, iter=n.iter, cores=num.cores )
   
   Data$Occupancy.formula <- Occupancy.formula
   Data$Detection.formula <- Detection.formula

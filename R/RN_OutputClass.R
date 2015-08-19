@@ -29,7 +29,7 @@ predict.RN_OccupancyModel <- function(object, newdata=NULL, level=0.95){
   if(is.null(newdata)){
     AX <- object$user.data$AX
   }else{
-    AX <- model.matrix(object$user.data$Occupancy.formula, newdata) 
+    AX <- model.matrix(object$user.data$Abundance.formula, newdata) 
   }
   lambda <- exp(AX %*% t(rstan::extract(object$chains, pars='beta_A')$beta_A) )
   Psi <- cbind( 
