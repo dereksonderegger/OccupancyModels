@@ -1,14 +1,13 @@
 #' Create simulated Occupancy data using the Occupancy/Detection model 
 #' 
-#' Creates simulated data from the 
-#' Occupancy/Availability model. The primary use of
-#' this function is for teaching the package.
-#' @param Design
-#' @param Covariate.data
-#' @param Occupancy model
-#' @param Occupancy params
-#' @param Detection model
-#' @param Detection params
+#' Creates simulated data from the standard
+#' Occupancy/Availability model. 
+#' @param Design Data specifying the design of the data. A data frame with columns Species, Site, Day, Observer 
+#' @param Covariate.data 
+#' @param Occupancy model A fixed effects formula for Occupancy at each site
+#' @param Occupancy params Parameters for the Occupancy formula
+#' @param Detection model A fiexed effects formula for Detection at each site
+#' @param Detection params Parameters for the Detection formula
 #' @export
 makeData.OD <- function(Design, Covariate.data = NULL,
                       Occupancy.formula = ~1, Occupancy.params=c(0),
@@ -47,13 +46,14 @@ makeData.OD <- function(Design, Covariate.data = NULL,
 #' @param n.iter How many samples to take after the burn-in.
 #' @param num.cores How many computer cores to use.
 #' @param inits Initial values for the model chains.
+#' @param ... Further arguments passed to Stan's sampling() command
 #' @export
 Occ.OD <- function(Y, Covariate.data=NULL, 
                    Occupancy.formula = ~1,
                    Detection.formula = ~1,
                    n.chains=4, n.adapt=1000, n.iter=1000,
                    num.cores=1,
-                   fit=NULL, inits=NULL){
+                   fit=NULL, inits=NULL, ...){
 
   colnames(Y) <- c('..Species','..Site','..Camera','..Effort','..NumDetections')
   Y <- Y %>% group_by() %>%
@@ -83,7 +83,7 @@ Occ.OD <- function(Y, Covariate.data=NULL,
     Data$i_OZ <- c(1,1)  # can be anything but stan wants it to be a vector
     pars <- c(pars, 'beta_O')
   }else{
-    temp    <- lFormula( as.formula( paste('..Occ.Y', deparse(Abundance.formula))), Covariate.data )
+    temp    <- lFormula( update.formula(Occupancy.formula, ..Occ.Y~.), Covariate.data )
     Data$OX   <- temp$X
     Data$p_OX <- ncol(Data$OX)
     Data$OZ   <- as.matrix( t(temp$reTrms$Zt) )
@@ -103,7 +103,7 @@ Occ.OD <- function(Y, Covariate.data=NULL,
     Data$i_DZ <- c(1,1)  # can be anything but stan wants it to be a vector
     pars <- c(pars, 'beta_D')
   }else{
-    temp    <- lFormula( as.formula( paste('..Occ.Y', deparse(Detection.formula))), covariate.data )
+    temp    <- lFormula( update.formula(Detection.formula, ..Occ.Y~.), Covariate.data )
     Data$DX   <- temp$X
     Data$p_DX <- ncol(Data$DX)
     Data$DZ   <- as.matrix( t(temp$reTrms$Zt) )
@@ -119,7 +119,7 @@ Occ.OD <- function(Y, Covariate.data=NULL,
                 model_name = 'Occ_OD_STAN')
   
   chains <- sampling(Occ_compiled_OD_model_STAN, data=Data,
-            pars=pars, chains=n.chains, iter=n.iter, cores=num.cores )
+            pars=pars, chains=n.chains, iter=n.iter, cores=num.cores, ... )
   
   Data$Occupancy.formula <- Occupancy.formula
   Data$Detection.formula <- Detection.formula

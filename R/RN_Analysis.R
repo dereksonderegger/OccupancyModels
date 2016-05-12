@@ -1,13 +1,14 @@
 #' Create Data using Royle-Nichols Occupancy Model
 #' 
-#' Blah blah blah
+#' Creates simulated data from the Royle-Nichols Abundance
+#' based occupancy model. 
 #' 
 #' @param Design Data specifying the design of the data. A data frame with columns Species, Site, Day, Observer 
 #' @param Abundance.formula A fixed effects formula for Abundance at each site
 #' @param Abundance.params  Parameters that define Abundance
 #' @param Detection.formula A fixed effects formula for Detection 
 #' @param Detection.params  Parameters that define Detection
-#' @return Somthing 
+#' @return matrix of observed occupancies.
 #' @export              
 makeData.RN <- function(Design, Covariate.data=NULL,
                         Abundance.formula=~1,  Abundance.params=0,
@@ -48,6 +49,7 @@ makeData.RN <- function(Design, Covariate.data=NULL,
 #' @param n.iter How many samples to take after the burn-in.
 #' @param num.cores How many computer cores to use.
 #' @param inits Initial values for the model chains.
+#' @param ... Further arguments passed to Stan's sampling() command
 #' @return An object of type RN_OccupancyModel
 #' @export
 Occ.RN <- function( Y, Covariate.data=NULL, 
@@ -56,7 +58,7 @@ Occ.RN <- function( Y, Covariate.data=NULL,
                     N.limit = 10,
                     n.chains=4, n.adapt=1000, n.iter=1000,
                     num.cores=1,
-                    fit=NA, inits=NULL ){
+                    fit=NA, inits=NULL, ... ){
   
   colnames(Y) <- c('..Species','..Site','..Camera','..Effort','..NumDetections')
   Y <- Y %>% group_by() %>%
@@ -83,7 +85,7 @@ Occ.RN <- function( Y, Covariate.data=NULL,
     Data$i_AZ <- c(1,1)  # can be anything but stan wants it to be a vector
     pars <- c(pars, 'beta_A')
   }else{
-    temp    <- lFormula( as.formula( paste('..NumDetections', deparse(Abundance.formula))), data )
+    temp    <- lFormula( update.formula(Abundance.formula, ..NumDetections~.), data )
     Data$AX   <- temp$X
     Data$p_AX <- ncol(Data$AX)
     Data$AZ   <- as.matrix( t(temp$reTrms$Zt) )
@@ -104,7 +106,7 @@ Occ.RN <- function( Y, Covariate.data=NULL,
     Data$i_DZ <- c(1,1)  # can be anything but stan wants it to be a vector
     pars <- c(pars, 'beta_D')
   }else{
-    temp    <- lFormula( as.formula( paste('..NumDetections', deparse(Detection.formula))), data )
+    temp    <- lFormula( update.formula(Detection.formula, ..NumDetections~.), data )
     Data$DX   <- temp$X
     Data$p_DX <- ncol(Data$DX)
     Data$DZ   <- as.matrix( t(temp$reTrms$Zt) )
